@@ -13,11 +13,16 @@ interface Text {
     public Text getComponent();
 }
 
-public class CompositeText implements Text{
 
-
+public class CompositeText  implements Text{
         private List<Text> components = new ArrayList<>() ;
-    public CompositeText (){
+    protected enum Type {PARAGRAPH,SENTENCE,WORD,SYMBOL}
+    Type type;
+
+
+    public CompositeText (Type type){
+        this.type=type;
+
     }
 
     @Override
@@ -39,5 +44,6 @@ public class CompositeText implements Text{
     public Text getComponent() {
         return null;
     }
+
 }
 

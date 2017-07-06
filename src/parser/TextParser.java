@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * Created by java on 5/25/2017.
  */
-public class TextParser {
+public class TextParser extends CompositeText{
     static
     {
         new DOMConfigurator().doConfigure("log4j.xml", org.apache.log4j.LogManager.getLoggerRepository());
@@ -23,6 +23,11 @@ public class TextParser {
     static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(TextParser.class);
     public static final String SENTENCE = "[\\.\\!\\?]";
     public static final String WORD = "\\s*(\\s|,|!|\\.)\\s*";
+
+    public TextParser(Type type) {
+        super(type);
+    }
+
 
     public  String Read(String path) throws IOException {
         FileInputStream inFile = new FileInputStream(path);
@@ -40,7 +45,8 @@ public class TextParser {
         return wholeText;}
 
     public CompositeText parseToParagraph(String text){
-        CompositeText paragraphs = new Paragraph();
+        Type type = Type.PARAGRAPH;
+        CompositeText paragraphs = new CompositeText(type);
         Pattern patternparagraph = Pattern.compile("(?m)(?=^\\s{3})");
         logger.info("Start working");
         for(String paragraph:patternparagraph.split(text)){
@@ -52,7 +58,8 @@ public class TextParser {
 
 
     public CompositeText parseToSentence (String paragraph){
-        CompositeText sentences = new Sentence();
+        Type type = Type.SENTENCE;
+        CompositeText sentences = new CompositeText(type);
         Pattern patternsentence= Pattern.compile(SENTENCE);
         for(String sentence:patternsentence.split(paragraph)){
             Leaf leaf = new Leaf(sentence);
@@ -62,7 +69,8 @@ public class TextParser {
         return sentences;}
 
     public CompositeText parseToWord (String sentence) {
-        CompositeText words = new Word();
+        Type type = Type.WORD;
+        CompositeText words =  new CompositeText(type);
         Pattern patternword = Pattern.compile(WORD);
         for(String word:patternword.split(sentence)){
             Leaf leaf = new Leaf(word);
@@ -73,7 +81,8 @@ public class TextParser {
 
 
         public CompositeText parseToSymbol (String word) {
-            CompositeText symbols = new Symbol();
+            Type type = Type.SYMBOL;
+            CompositeText symbols = new CompositeText(type);
             for(char symbol:word.toCharArray ()){
                 String ssymbol = String.valueOf(symbol);
                 Leaf leaf = new Leaf(ssymbol);
